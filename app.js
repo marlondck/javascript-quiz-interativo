@@ -1,37 +1,68 @@
-// selecionar o form
 const form = document.querySelector('.quiz-form ')
-// selecionar a div que mostra o resultado
-const finalResult = document.querySelector('.result')
+const finalScoreContainer = document.querySelector('.final-score-container')
 
-// Array que armazena as repostas corretas
-const correctAsnwers = ['B', 'B', 'B', 'B',]
+let score = 0
 
-// adiciona um event listener no form 
-form.addEventListener('submit', event => {
-  event.preventDefault()
+const correctAsnwers = ['B', 'B', 'B', 'B']
 
-  let score = 0
+const getUserAnswers = () => {
+  let userAnswers = []
+  // forma 1
+  // for (let i = 0; i < correctAsnwers.length; i++) {
+  //   form[`inputQuestion${i + 1}`].value
+  // }
 
-  // pega o valor de cada input-radio
-  const userAnswers = [
-    form.inputQuestion1.value,
-    form.inputQuestion2.value,
-    form.inputQuestion3.value,
-    form.inputQuestion4.value,
-  ]
+  // forma 2
+  // o _ é uma convencao usada para que seja ignorado este parametro que nao é usado
+  correctAsnwers.forEach((_, index) => {
+    const userAnswer = form[`inputQuestion${index + 1}`].value
+    userAnswers.push(userAnswer)
+  })
 
-  // percorre o array de input radios
+  return userAnswers
+}
+
+const calculateUserScore = userAnswers => {
   userAnswers.forEach((userAnswer, index) => {
-    // verifica se o valor do radio atual é igual ao do array de respostas certas
-    if(userAnswer === correctAsnwers[index]) {
-      // a cada pergunta certa recebe 25 pontos no score pra totalizar 100 deve acertas as 4 perguntas
+    const isUserAnswerCorrect = userAnswer === correctAsnwers[index]
+    if(isUserAnswerCorrect) {
       score += 25
     }
-
-    // mostrar o resultado na tela
-    // user a div finalResult e partir dela pegar o span dentro
-    finalResult.querySelector('span').textContent = `${score}%`
-    // remover a class css que poe display none
-    finalResult.classList.remove('d-none')
   })
+}
+
+const showFinalScore = () => {
+  // rolar a pagina para o topo suavemente
+  scrollTo({
+    top: 0,
+    left: 0,
+    behavior: "smooth"
+  })
+  
+  // remover a class css que poe display none
+  finalScoreContainer.classList.remove('d-none')
+}
+
+const animateFinalScore = () => {
+  let counter = 0
+  
+  const timer = setInterval(() => {
+    if(counter === score) {
+      clearInterval(timer)
+    }
+
+    finalScoreContainer.querySelector('span').textContent = `${counter++}%`
+  }, 10)
+}
+
+
+form.addEventListener('submit', event => {
+  event.preventDefault()
+  
+  const userAnswers = getUserAnswers()
+  
+  calculateUserScore(userAnswers)
+  showFinalScore()
+  animateFinalScore()
+
 })
