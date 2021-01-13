@@ -5,23 +5,13 @@ let score = 0
 
 const correctAsnwers = ['B', 'B', 'B', 'B']
 
-const getUserAnswers = () => {
-  let userAnswers = []
-  // forma 1
-  // for (let i = 0; i < correctAsnwers.length; i++) {
-  //   form[`inputQuestion${i + 1}`].value
-  // }
+const getUserAnswers = () => correctAsnwers.map((_, index) => 
+  form[`inputQuestion${index + 1}`].value)
+ 
 
-  // forma 2
-  // o _ é uma convencao usada para que seja ignorado este parametro que nao é usado
-  correctAsnwers.forEach((_, index) => {
-    const userAnswer = form[`inputQuestion${index + 1}`].value
-    userAnswers.push(userAnswer)
-  })
-
-  return userAnswers
-}
-
+// Aqui nao se usa map, filter ou reduce pois aqui esta sendo produzido um efeito colateral
+// esta modificando uma let que esta fora do escopo
+// o map, filter e reduce nao devem ser usados para efeitos colaterias
 const calculateUserScore = userAnswers => {
   userAnswers.forEach((userAnswer, index) => {
     const isUserAnswerCorrect = userAnswer === correctAsnwers[index]
@@ -32,14 +22,12 @@ const calculateUserScore = userAnswers => {
 }
 
 const showFinalScore = () => {
-  // rolar a pagina para o topo suavemente
   scrollTo({
     top: 0,
     left: 0,
     behavior: "smooth"
   })
   
-  // remover a class css que poe display none
   finalScoreContainer.classList.remove('d-none')
 }
 
