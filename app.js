@@ -2,6 +2,7 @@ const form = document.querySelector('.quiz-form ')
 const finalScoreContainer = document.querySelector('.final-score-container')
 
 let score = 0
+let counter;
 
 const correctAsnwers = ['B', 'B', 'B', 'B']
 
@@ -32,7 +33,7 @@ const showFinalScore = () => {
 }
 
 const animateFinalScore = () => {
-  let counter = 0
+  counter = 0
   
   const timer = setInterval(() => {
     if(counter === score) {
@@ -43,14 +44,17 @@ const animateFinalScore = () => {
   }, 10)
 }
 
+const resetUserScore = () => {
+  score = 0
+}
 
 form.addEventListener('submit', event => {
   event.preventDefault()
   
   const userAnswers = getUserAnswers()
   
+  resetUserScore()
   calculateUserScore(userAnswers)
   showFinalScore()
   animateFinalScore()
-
 })
